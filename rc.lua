@@ -6,6 +6,8 @@ require("awful.rules")
 require("beautiful")
 -- Notification library
 require("naughty")
+-- widgets
+vicious = require("vicious")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -34,7 +36,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
+beautiful.init("/usr/share/awesome/themes/davesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "gnome-terminal"
@@ -100,6 +102,15 @@ mytextclock = awful.widget.textclock({ align = "right" })
 
 -- Create a systray
 mysystray = widget({ type = "systray" })
+
+-- {{{ Battery widget
+baticon = widget ({type = "imagebox" })
+baticon.image = image(beautiful.widget_battery)
+batwidget1 = widget({ type = "textbox" })
+vicious.register( batwidget1, vicious.widgets.bat, '<span background="#3F3F3F" font="Terminus 12"> <span font="Terminus 9" color="#FFFFFF" background="#3F3F3F">$1$2%</span></span>', 1, "BAT0" )
+batwidget2 = widget({ type = "textbox" })
+vicious.register( batwidget2, vicious.widgets.bat, '<span background="#3F3F3F" font="Terminus 12"> <span font="Terminus 9" color="#FFFFFF" background="#3F3F3F">$1$2% </span></span>', 1, "BAT1" )
+
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -178,6 +189,9 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
         s == 1 and mysystray or nil,
+        batwidget2,
+        batwidget1,
+        --baticon,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
