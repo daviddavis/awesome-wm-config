@@ -39,7 +39,7 @@ end
 beautiful.init("/usr/share/awesome/themes/davesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+terminal = os.getenv("TERMINAL") or 'urxvt256c'
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -104,12 +104,21 @@ mytextclock = awful.widget.textclock({ align = "right" })
 mysystray = widget({ type = "systray" })
 
 -- {{{ Battery widget
-baticon = widget ({type = "imagebox" })
-baticon.image = image(beautiful.widget_battery)
 batwidget1 = widget({ type = "textbox" })
 vicious.register( batwidget1, vicious.widgets.bat, '<span background="#3F3F3F" font="Terminus 12"> <span font="Terminus 9" color="#FFFFFF" background="#3F3F3F">$1$2%</span></span>', 1, "BAT0" )
 batwidget2 = widget({ type = "textbox" })
 vicious.register( batwidget2, vicious.widgets.bat, '<span background="#3F3F3F" font="Terminus 12"> <span font="Terminus 9" color="#FFFFFF" background="#3F3F3F">$1$2% </span></span>', 1, "BAT1" )
+
+-- {{{ Weather widget
+weatherwidget = widget({ type = "textbox" })
+weather_t = awful.tooltip({ objects = { weatherwidget }, })
+vicious.register( weatherwidget, vicious.widgets.weather,
+                  function (widget, args)
+                    weather_t:set_text("City: " .. args["{city}"] .."\nWind: " .. args["{windmph}"] .. "mph " .. args["{wind}"] .. "\nSky: " .. args["{sky}"] .. "\nHumidity: " .. args["{humid}"] .. "%")
+                    return args["{tempf}"] .. "°"
+                  end, 1800, "KRDU")
+                --'1800': check every 30 minutes.
+                --'WRDU': the RDU airport ICAO code.
 
 
 -- Create a wibox for each screen and add it
@@ -188,10 +197,10 @@ for s = 1, screen.count() do
         },
         mylayoutbox[s],
         mytextclock,
-        s == 1 and mysystray or nil,
+        weatherwidget,
         batwidget2,
         batwidget1,
-        --baticon,
+        s == 1 and mysystray or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
