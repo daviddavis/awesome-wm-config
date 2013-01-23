@@ -8,6 +8,7 @@ require("beautiful")
 require("naughty")
 -- widgets
 vicious = require("vicious")
+home_dir = os.getenv("HOME")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -36,7 +37,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/share/awesome/themes/davesome/theme.lua")
+beautiful.init(home_dir .. "/.config/awesome/themes/davesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = os.getenv("TERMINAL") or 'urxvt256c'
