@@ -89,7 +89,7 @@ myawesomemenu = {
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                     { "open terminal", terminal },
-                                    { "internet", "google-chrome" }
+                                    { "internet", "chrome" }
                                   }
                         })
 
@@ -250,6 +250,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
+    awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn("/usr/bin/chrome") end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -266,6 +267,21 @@ globalkeys = awful.util.table.join(
 
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
+
+    -- Lock screen
+    awful.key({ modkey, "Mod1"     }, "l",     function () awful.util.spawn("slock") end),
+
+    -- Hardware keyboard keys
+    awful.key({ }, "XF86MonBrightnessDown", function ()
+        awful.util.spawn("xbacklight -dec 15", false) end),
+    awful.key({ }, "XF86MonBrightnessUp", function ()
+        awful.util.spawn("xbacklight -inc 15", false) end),
+    awful.key({ }, "XF86AudioRaiseVolume", function ()
+         awful.util.spawn("amixer set Master 9%+", false) end),
+    awful.key({ }, "XF86AudioLowerVolume", function ()
+         awful.util.spawn("amixer set Master 9%-", false) end),
+    awful.key({ }, "XF86AudioMute", function ()
+         awful.util.spawn("amixer sset Master toggle", false) end),
 
     awful.key({ modkey }, "x",
               function ()
